@@ -12,8 +12,8 @@ import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.franklinndiwe.insight.MainActivity
@@ -39,12 +39,12 @@ class DailyQuoteNotification(context: Context, setting: Setting) {
 
     // Create a OneTimeWorkRequest to show the notification
     private val notificationWorkRequest =
-        OneTimeWorkRequestBuilder<NotificationWorker>().setInitialDelay(
+        PeriodicWorkRequestBuilder<NotificationWorker>(24, TimeUnit.HOURS).setInitialDelay(
             calculateDelayUntilNextNotification(), TimeUnit.MILLISECONDS
         ).addTag(TAG).build()
 
-    fun scheduleNotification() = workManager.enqueueUniqueWork(
-        TAG, ExistingWorkPolicy.REPLACE, notificationWorkRequest
+    fun scheduleNotification() = workManager.enqueueUniquePeriodicWork(
+        TAG, ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, notificationWorkRequest
     )
 
     fun cancelSchedule() = workManager.cancelAllWorkByTag(TAG)

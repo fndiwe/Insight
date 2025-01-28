@@ -30,7 +30,6 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) :
                             applicationContext, it3
                         )
                     }
-                dailyQuoteNotification.scheduleNotification()
             }
         }
         return Result.success()
